@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+    <context:component-scan base-package="com.shoppingCart.Controller" />
+    
+    
+    <bean id="viewResolver"
+        class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+        <property name="viewClass"
+            value="org.springframework.web.servlet.view.JstlView" />
+        <property name="prefix" value="/WEB-INF/jsp/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+    
+    <bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource">
+	  	 <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+	  	 <property name="url" value="jdbc:mysql://localhost:3306/shopping_cart_schema"></property>
+	  	 <property name="username" value="root"></property>
+	  	 <property name="password" value="tiger"></property>
+	  	 <property name="initialSize" value="8"></property>
+	  	 <property name="maxActive" value="7"></property>  
+    </bean>
+    
+        
+    <bean id="sessionFactory"      class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="dataSource" ref="datasource"/>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>
+	    <property name="annotatedClasses"> 
+			<list>
+			  <value> com.shoppingCart.Model.Inventory </value>
+			  <value> com.shoppingCart.Model.LoginDetails </value>
+			  <value> com.shoppingCart.Model.OrderDetails </value>
+			  <value> com.shoppingCart.Model.VendorDetails </value>
+	        </list>
+	   </property>  
+	 </bean> 
+	 
+	 <bean id="inventoryService" class="com.shoppingCart.Services.InventoryService"> 
+     <property name="invDao" ref="inventoryDao"> </property>
+    </bean>
+    
+    <bean id="inventoryDao" class="com.shoppingCart.DaoIMPL.InventoryDaoIMPL">
+      <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    
+     <bean id="loginDetailService" class="com.shoppingCart.Services.LoginDetailsService"> 
+     <property name="logDetDao" ref="loginDetailsDao"> </property>
+    </bean>
+    
+    <bean id="loginDetailsDao" class="com.shoppingCart.DaoIMPL.LoginDetailsDaoIMPL">
+      <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    
+     <bean id="orderDetailService" class="com.shoppingCart.Services.OrderDetailsService"> 
+     <property name="orderDao" ref="oderDetailsDao"> </property>
+    </bean>
+    
+    <bean id="oderDetailsDao" class="com.shoppingCart.DaoIMPL.OrderDetailsDaoIMPL">
+      <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    
+    <bean id="vendorService" class="com.shoppingCart.Services.VendorService"> 
+     <property name="vendorDao" ref="vendorDetailsDao"> </property>
+    </bean>
+    
+    <bean id="vendorDetailsDao" class="com.shoppingCart.DaoIMPL.VendorDaoIMPL">
+      <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+   
+    
+    
+</beans>
